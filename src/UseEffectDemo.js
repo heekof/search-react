@@ -9,22 +9,26 @@ import React, {useState, useEffect} from 'react';
 
 /*
 
-Use Effect  is used as a side effect for modifications.
+
 */
 export default function App() {
 
   // this useState hook is always called !
   const [resourceType , setResourceType] = useState('posts')
   const [forceUpdate, handleClick] = useState(0); // This is new
+  const[items, setItems] = useState([])
 
-  console.log("render")
+  useEffect(() => {console.log('Render')})
+
+  
 
   useEffect(() => {
 
     console.log("Resource type changed")
 
-    // code cleanup
-  return () => {console.log("Clean up")} 
+    fetch(`https://jsonplaceholder.typicode.com/${resourceType}`)
+      .then(response => response.json())
+      .then(json => setItems(json))
 
   }, [resourceType] )
 
@@ -55,7 +59,9 @@ export default function App() {
 <button onClick={() => handleClickGlob('comments')}> Comments </button>
 </div>
 
-<h1>{resourceType}
+<h1>{items.map(item => {
+   return  <pre> {JSON.stringify(item)} </pre>   
+   })}
    </h1>
 
 
